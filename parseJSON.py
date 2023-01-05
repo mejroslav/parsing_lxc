@@ -32,10 +32,15 @@ def print_info_data(json_data: list[dict]) -> None:
             
         print("")
 
+def search_for_addresses(container: dict):
+    network = container["state"]["network"]
+    for key, value in network.items():
+        print(key, value)
+
 def main():
     filename = "sample-data.json"
     data = load_json(filename)
-    print_info_data(data)
+    # print_info_data(data)
 
 if __name__ == "__main__":
     main()
