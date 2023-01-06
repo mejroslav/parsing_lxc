@@ -12,6 +12,8 @@ The interview assignment.
 4. Grant the user all privileges to the database:
    `GRANT ALL ON db_name.* TO 'username';`
 5. Write the connection details to `connection.json`.
-6. Run `main.py`.
-7. You can view the data:
+6. Install modules if you don't have them already:
+   `pip install glom mysql-connector-python`,
+7. Run `main.py`.
+8. You can view the data:
    `SELECT * FROM containers`, `SELECT * FROM addresses`
