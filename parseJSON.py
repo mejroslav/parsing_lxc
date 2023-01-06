@@ -4,7 +4,9 @@ import datetime as dt
 from glom import glom # deep property access
 from collections import namedtuple
 
-from saveToDatabase import *
+# namedtuple for containers
+LXC_Container = namedtuple("LXC_Container", "name cpu memory created_at status addresses")
+
 
 def UTC_time(timezone_date: str):
     """Convert timezone date to UTC timestamp."""
@@ -41,11 +43,8 @@ def print_info_data(json_data: list[dict]) -> None:
         print("")
 
 
-# namedtuple funguje podobně jako structs
-# namedtuple(název, attributes oddělené mezerami)
-LXC_Container = namedtuple("LXC_Container", "name cpu memory created_at status addresses")
-        
 def create_containers_from_json(json_data: list[dict]) -> list[LXC_Container]:
+    """Take the json file and deserialize it to a list of LXC_Containers."""
     containers = []
     for container in json_data:
         # search for all addresses
@@ -68,15 +67,3 @@ def create_containers_from_json(json_data: list[dict]) -> list[LXC_Container]:
         
     return containers
         
-
-def main():
-    filename = "sample-data.json"
-    data = load_json(filename)
-    # print_info_data(data)
-    # print(create_containers_from_json(data))
-    
-    db = initialize_MySQL()
-    save_to_database(db, create_containers_from_json(data))
-
-if __name__ == "__main__":
-    main()

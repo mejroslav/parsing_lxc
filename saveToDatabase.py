@@ -1,14 +1,15 @@
+import json
 import mysql.connector
 from parseJSON import LXC_Container
 
 def initialize_MySQL() -> mysql.connector.MySQLConnection:
-    """Initialize MySQL and create a database if it does not exist."""
-    database = mysql.connector.connect(
-        host = "localhost",
-        user = "blazniva_ponozka",
-        passwd="blazniva_ponozka_2023_6969696969_MoznaVelkyPismena",
-        database="lxc_containers"
-    )
+    """Initialize MySQL with connection details specified in 'connection.json' and create the required tables, dropping them if exist."""
+    
+    with open("connection.json", "r", encoding="utf-8") as f:
+        database = mysql.connector.connect(
+            **json.loads(f.read())
+        )
+    
     cursor = database.cursor()
     cursor.execute("""DROP TABLE IF EXISTS containers""")
     cursor.execute("""DROP TABLE IF EXISTS addresses""")
@@ -35,6 +36,8 @@ def initialize_MySQL() -> mysql.connector.MySQLConnection:
 
 
 def save_to_database(database: mysql.connector.MySQLConnection, data: list[LXC_Container]):
+    """Take the list of LXC_Containers and write it to tables named 'containers' and 'addresses'."""
+    
     cursor = database.cursor()
     
     containers_tuple = [(x.name, x.cpu, x.memory, x.created_at, x.status) for x in data]
