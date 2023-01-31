@@ -1,5 +1,6 @@
 import json
 import datetime as dt
+import logging
 
 from glom import glom # deep property access
 from collections import namedtuple
@@ -17,13 +18,17 @@ def UTC_time(timezone_date: str):
 
 def load_json(filename: str) -> dict:
     """Load json file."""
-    with open(filename, "r", encoding="utf-8") as f:
-        json_data = f.read()
+    logging.info(f"Parsing data from {filename}")
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            json_data = f.read()
+    except Exception as err:
+        logging.exception("Cannot load json file", exc_info=True)
     return json.loads(json_data)
 
 
 def print_info_data(json_data: list[dict]) -> None:
-    """From json data print name, cpu, memory usage, created_at, status, list of IP addresses."""
+    """Utility function. From json data print name, cpu, memory usage, created_at, status, list of IP addresses."""
     
     for container in json_data:
         print("name:",container["name"])
@@ -44,7 +49,8 @@ def print_info_data(json_data: list[dict]) -> None:
 
 
 def create_containers_from_json(json_data: list[dict]) -> list[LXC_Container]:
-    """Take the json file and deserialize it to a list of LXC_Containers."""
+    """Take the json data and deserialize it to a list of LXC_Containers."""
+    logging.info("Creating the list of containers")
     containers = []
     for container in json_data:
         # search for all addresses
@@ -65,5 +71,6 @@ def create_containers_from_json(json_data: list[dict]) -> list[LXC_Container]:
         )
         containers.append(x)
         
+    logging.info("List of containers created")
     return containers
         
